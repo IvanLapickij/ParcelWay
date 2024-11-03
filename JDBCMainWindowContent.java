@@ -48,7 +48,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 	private JButton deleteButton  = new JButton("Delete");
 	private JButton clearButton  = new JButton("Clear");
 
-	private JButton  NumLectures = new JButton("NumLecturesForDepartment:");
+	private JButton  NumDeliveries = new JButton("NumDeliveriesForCustomerID:");
 	private JTextField NumLecturesTF  = new JTextField(12);
 	private JButton avgAgeDepartment  = new JButton("AvgAgeForDepartment");
 	private JTextField avgAgeDepartmentTF  = new JTextField(12);
@@ -92,7 +92,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		exportButtonPanel.setLayout(new GridLayout(3,2));
 		exportButtonPanel.setBackground(Color.lightGray);
 		exportButtonPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "Export Data"));
-		exportButtonPanel.add(NumLectures);
+		exportButtonPanel.add(NumDeliveries);
 		exportButtonPanel.add(NumLecturesTF);
 		exportButtonPanel.add(avgAgeDepartment);
 		exportButtonPanel.add(avgAgeDepartmentTF);
@@ -121,7 +121,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		clearButton.addActionListener(this);
 
 		this.ListAllDepartments.addActionListener(this);
-		this.NumLectures.addActionListener(this);
+		this.NumDeliveries.addActionListener(this);
 
 
 		content.add(insertButton);
@@ -226,15 +226,16 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 		}
 
-		if(target == this.NumLectures){
-			String deptName = this.NumLecturesTF.getText();
+		if(target == this.NumDeliveries){
+			String CustID = this.NumLecturesTF.getText();
 
-			cmd = "select department, count(*) "+  "from Customers " + "where department = '"  +deptName+"';";
+			cmd = "select COUNT(ParcelID ) AS DeliveryCount "+  "from  Parcels " + "where CustomerID = '"  +CustID+"';";
 
 			System.out.println(cmd);
 			try{					
 				rs= stmt.executeQuery(cmd); 	
 				writeToFile(rs);
+				
 			}
 			catch(Exception e1){e1.printStackTrace();}
 
@@ -250,7 +251,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			PrintWriter printWriter = new PrintWriter(outputFile);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			int numColumns = rsmd.getColumnCount();
-
+			
 			for(int i=0;i<numColumns;i++){
 				printWriter.print(rsmd.getColumnLabel(i+1)+",");
 			}
@@ -258,6 +259,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			while(rs.next()){
 				for(int i=0;i<numColumns;i++){
 					printWriter.print(rs.getString(i+1)+",");
+					//Message displaying DeliveryCount without opening MyOutput.csv
+					System.out.println(rsmd.getColumnLabel(i + 1)+ " = " +rs.getString(i + 1));
 				}
 				printWriter.print("\n");
 				printWriter.flush();
