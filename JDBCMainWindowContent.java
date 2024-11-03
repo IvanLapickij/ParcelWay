@@ -52,7 +52,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 	private JTextField NumLecturesTF  = new JTextField(12);
 	private JButton avgAgeDepartment  = new JButton("AvgAgeForDepartment");
 	private JTextField avgAgeDepartmentTF  = new JTextField(12);
-	private JButton ListAllDepartments  = new JButton("ListAllDepartments");
+	private JButton ListVehicles  = new JButton("ListAllVehicles");
 	private JButton ListAllPositions  = new JButton("ListAllPositions");
 
 
@@ -96,7 +96,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		exportButtonPanel.add(NumLecturesTF);
 		exportButtonPanel.add(avgAgeDepartment);
 		exportButtonPanel.add(avgAgeDepartmentTF);
-		exportButtonPanel.add(ListAllDepartments);
+		exportButtonPanel.add(ListVehicles);
 		exportButtonPanel.add(ListAllPositions);
 		exportButtonPanel.setSize(500, 200);
 		exportButtonPanel.setLocation(3, 300);
@@ -120,7 +120,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		deleteButton.addActionListener(this);
 		clearButton.addActionListener(this);
 
-		this.ListAllDepartments.addActionListener(this);
+		this.ListVehicles.addActionListener(this);
 		this.NumDeliveries.addActionListener(this);
 
 
@@ -184,7 +184,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			EmailTF.setText("");
 			PhoneTF.setText("");
 		}
-
+		
+		//INSERT
 		if (target == insertButton)
 		{		 
 			try
@@ -214,9 +215,9 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		//I have only added functionality of 2 of the button on the lower right of the template
 		///////////////////////////////////////////////////////////////////////////////////
 
-		if(target == this.ListAllDepartments){
+		if(target == this.ListVehicles){
 
-			cmd = "select distinct department from Customers;";
+			cmd = "select distinct Vehicle from Deliveries;";
 
 			try{					
 				rs= stmt.executeQuery(cmd); 	
