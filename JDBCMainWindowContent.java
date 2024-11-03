@@ -49,9 +49,9 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 	private JButton clearButton  = new JButton("Clear");
 
 	private JButton  NumDeliveries = new JButton("NumDeliveriesForCustomerID:");
-	private JTextField NumLecturesTF  = new JTextField(12);
-	private JButton avgAgeDepartment  = new JButton("AvgAgeForDepartment");
-	private JTextField avgAgeDepartmentTF  = new JTextField(12);
+	private JTextField NumDeliveriesTF  = new JTextField(12);
+	private JButton avgWeightParcel  = new JButton("avgWeighForParcels");
+	private JTextField avgWeightParcelTF  = new JTextField(12);
 	private JButton ListVehicles  = new JButton("ListAllVehicles");
 	private JButton ListAllPositions  = new JButton("ListAllPositions");
 
@@ -93,9 +93,9 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		exportButtonPanel.setBackground(Color.lightGray);
 		exportButtonPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "Export Data"));
 		exportButtonPanel.add(NumDeliveries);
-		exportButtonPanel.add(NumLecturesTF);
-		exportButtonPanel.add(avgAgeDepartment);
-		exportButtonPanel.add(avgAgeDepartmentTF);
+		exportButtonPanel.add(NumDeliveriesTF);
+		exportButtonPanel.add(avgWeightParcel);
+		exportButtonPanel.add(avgWeightParcelTF);
 		exportButtonPanel.add(ListVehicles);
 		exportButtonPanel.add(ListAllPositions);
 		exportButtonPanel.setSize(500, 200);
@@ -121,6 +121,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		clearButton.addActionListener(this);
 
 		this.ListVehicles.addActionListener(this);
+		this.avgWeightParcel.addActionListener(this);
 		this.NumDeliveries.addActionListener(this);
 
 
@@ -209,12 +210,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				TableModel.refreshFromDB(stmt);
 			}
 		}
-
-
-		/////////////////////////////////////////////////////////////////////////////////////
-		//I have only added functionality of 2 of the button on the lower right of the template
-		///////////////////////////////////////////////////////////////////////////////////
-
+		
+		//List of Distinct Vehicles
 		if(target == this.ListVehicles){
 
 			cmd = "select distinct Vehicle from Deliveries;";
@@ -226,9 +223,29 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			catch(Exception e1){e1.printStackTrace();}
 
 		}
+		
+		//Average Weight of Parcel
+				if(target == this.avgWeightParcel){
+					String Vechile = this.avgWeightParcelTF.getText();
+					cmd = "SELECT \r\n"
+							+ "    d.Vehicle,\r\n"
+							+ "    ROUND(AVG(p.Weight), 2) as AverageWeight\r\n"
+							+ "FROM \r\n"
+							+ "    Deliveries d\r\n"
+							+ "    JOIN Parcels p ON d.ParcelID = p.ParcelID\r\n"
+							+ "WHERE Vehicle = '" + Vechile+"';";
 
+					try{					
+						rs= stmt.executeQuery(cmd); 	
+						writeToFile(rs);
+					}
+					catch(Exception e1){e1.printStackTrace();}
+
+				}
+
+		//Number Of Deliveries
 		if(target == this.NumDeliveries){
-			String CustID = this.NumLecturesTF.getText();
+			String CustID = this.NumDeliveriesTF.getText();
 
 			cmd = "select COUNT(ParcelID ) AS DeliveryCount "+  "from  Parcels " + "where CustomerID = '"  +CustID+"';";
 
@@ -243,6 +260,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		} 
 
 	}
+	
 	///////////////////////////////////////////////////////////////////////////
 
 	private void writeToFile(ResultSet rs){
