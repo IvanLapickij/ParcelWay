@@ -25,7 +25,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 	private Border lineBorder;
 
-	//private JLabel CustomersIDLabel=new JLabel("Customers ID:                 ");
+	private JLabel CustomersIDLabel=new JLabel("Customers ID:      ");
 	private JLabel FullNameLabel=new JLabel("FullName:               ");
 	private JLabel AddressLabel=new JLabel("Address:        ");
 	private JLabel EmailLabel=new JLabel("Email:                 ");
@@ -76,8 +76,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		detailsPanel.setBackground(Color.lightGray);
 		detailsPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "CRUD Actions"));
 
-		//detailsPanel.add(CustomersIDLabel);			
-		//detailsPanel.add(CustomersIDTF);
+		detailsPanel.add(CustomersIDLabel);			
+		detailsPanel.add(CustomersIDTF);
 		detailsPanel.add(FullNameLabel);		
 		detailsPanel.add(FullNameTF);
 		detailsPanel.add(AddressLabel);		
@@ -210,7 +210,29 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				TableModel.refreshFromDB(stmt);
 			}
 		}
-		
+		//DELETE
+				if (target == deleteButton){		 
+					String turnOffFKC = "SET FOREIGN_KEY_CHECKS=0;";
+					String turnOnFKC = "SET FOREIGN_KEY_CHECKS=1;";
+					String CustID = this.CustomersIDTF.getText();
+					try
+					{
+						String deleteTemp = "DELETE FROM Customers WHERE CustomerID = " + CustID+ ";";
+						System.out.println(deleteTemp);
+						stmt.executeUpdate(turnOffFKC);
+						stmt.executeUpdate(deleteTemp);
+						stmt.executeUpdate(turnOnFKC);
+
+					}
+					catch (SQLException sqle)
+					{
+						System.err.println("Error with  insert:\n"+sqle.toString());
+					}
+					finally
+					{
+						TableModel.refreshFromDB(stmt);
+					}
+				}
 		//List of Distinct Vehicles
 		if(target == this.ListVehicles){
 

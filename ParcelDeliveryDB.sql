@@ -122,3 +122,7 @@ FROM
     Deliveries d
     JOIN Parcels p ON d.ParcelID = p.ParcelID
 WHERE Vehicle = 'Van 1';
+#DELETE
+#SET FOREIGN_KEY_CHECKS=0; #– to disable them
+#DELETE FROM Customers WHERE CustomerID = 2;
+#SET FOREIGN_KEY_CHECKS=1; #– to re-enable them
