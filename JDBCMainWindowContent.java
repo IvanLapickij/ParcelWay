@@ -186,7 +186,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			PhoneTF.setText("");
 		}
 		
-		//INSERT
+		//INSERT ( Only Customers)
 		if (target == insertButton)
 		{		 
 			try
@@ -210,7 +210,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				TableModel.refreshFromDB(stmt);
 			}
 		}
-		//DELETE
+		//DELETE (Only Customers based on CustID)
 				if (target == deleteButton){		 
 					String turnOffFKC = "SET FOREIGN_KEY_CHECKS=0;";
 					String turnOnFKC = "SET FOREIGN_KEY_CHECKS=1;";
@@ -222,6 +222,30 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 						stmt.executeUpdate(turnOffFKC);
 						stmt.executeUpdate(deleteTemp);
 						stmt.executeUpdate(turnOnFKC);
+
+					}
+					catch (SQLException sqle)
+					{
+						System.err.println("Error with  insert:\n"+sqle.toString());
+					}
+					finally
+					{
+						TableModel.refreshFromDB(stmt);
+					}
+				}
+		//UPDATE (Only for address based on CustID)
+				if (target == updateButton){		 
+//					String turnOffFKC = "SET FOREIGN_KEY_CHECKS=0;";
+//					String turnOnFKC = "SET FOREIGN_KEY_CHECKS=1;";
+					String CustID = this.CustomersIDTF.getText();
+					String Address = this.AddressTF.getText();
+					try
+					{
+						String updateTemp = "UPDATE Customers SET Address = '"+Address+ "' WHERE CustomerID = " + CustID+ ";";
+						System.out.println(updateTemp);
+//						stmt.executeUpdate(turnOffFKC);
+						stmt.executeUpdate(updateTemp);
+//						stmt.executeUpdate(turnOnFKC);
 
 					}
 					catch (SQLException sqle)
