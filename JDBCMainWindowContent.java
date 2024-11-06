@@ -123,7 +123,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		this.ListVehicles.addActionListener(this);
 		this.avgWeightParcel.addActionListener(this);
 		this.NumDeliveries.addActionListener(this);
-
+		this.ListAllPositions.addActionListener(this);
 
 		content.add(insertButton);
 		content.add(updateButton);
@@ -304,7 +304,20 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 			catch(Exception e1){e1.printStackTrace();}
 
 		} 
+		
+		//List all Positions
+				if(target == this.ListAllPositions){
+					cmd = "select DISTINCT  Position FROM Employees;";
+					System.out.println(cmd);
+					try{					
+						rs= stmt.executeQuery(cmd); 	
+						writeToFile(rs);
+						
+					}
+					catch(Exception e1){e1.printStackTrace();}
 
+
+				}
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
