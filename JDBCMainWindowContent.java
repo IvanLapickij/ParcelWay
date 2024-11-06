@@ -191,7 +191,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		{		 
 			try
 			{
-				String updateTemp = "INSERT INTO Customers (FullName, Address, Email, Phone) VALUES ('" 
+				String updateTemp = "INSERT INTO customers_view (FullName, Address, Email, Phone) VALUES ('" 
 	                    + FullNameTF.getText() + "', '" 
 	                    + AddressTF.getText() + "', '" 
 	                    + EmailTF.getText() + "', '" 
@@ -217,7 +217,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 					String CustID = this.CustomersIDTF.getText();
 					try
 					{
-						String deleteTemp = "DELETE FROM Customers WHERE CustomerID = " + CustID+ ";";
+						String deleteTemp = "DELETE FROM customers_view WHERE CustomerID = " + CustID+ ";";
 						System.out.println(deleteTemp);
 						stmt.executeUpdate(turnOffFKC);
 						stmt.executeUpdate(deleteTemp);
@@ -241,7 +241,7 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 					String Address = this.AddressTF.getText();
 					try
 					{
-						String updateTemp = "UPDATE Customers SET Address = '"+Address+ "' WHERE CustomerID = " + CustID+ ";";
+						String updateTemp = "UPDATE customers_view SET Address = '"+Address+ "' WHERE CustomerID = " + CustID+ ";";
 						System.out.println(updateTemp);
 //						stmt.executeUpdate(turnOffFKC);
 						stmt.executeUpdate(updateTemp);
@@ -256,6 +256,18 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 					{
 						TableModel.refreshFromDB(stmt);
 					}
+				}
+			//EXPORT
+				if(target == this.exportButton){
+
+					cmd = "select * FROM Parcels;";
+
+					try{					
+						rs= stmt.executeQuery(cmd); 	
+						writeToFile(rs);
+					}
+					catch(Exception e1){e1.printStackTrace();}
+
 				}
 		//List of Distinct Vehicles
 		if(target == this.ListVehicles){

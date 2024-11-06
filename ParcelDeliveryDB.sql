@@ -126,3 +126,15 @@ WHERE Vehicle = 'Van 1';
 #SET FOREIGN_KEY_CHECKS=0; #– to disable them
 #DELETE FROM Customers WHERE CustomerID = 2;
 #SET FOREIGN_KEY_CHECKS=1; #– to re-enable them
+
+#select DISTINCT  Position FROM Employees;
+
+CREATE VIEW  customers_view
+		AS
+		SELECT CustomerID,FullName, Address, Email, Phone
+		FROM Customers
+        WHERE EMAIL !='bob.brown@example.com'
+        WITH CHECK OPTION;
+#DROP VIEW customers_view;
+        
+SELECT * FROM customers_view;
