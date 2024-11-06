@@ -47,6 +47,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 	private JButton exportButton  = new JButton("Export");
 	private JButton deleteButton  = new JButton("Delete");
 	private JButton clearButton  = new JButton("Clear");
+	private JButton previousTableButton  = new JButton("previous Table");
+	private JButton nextTableButton  = new JButton("next Table");
 
 	private JButton  NumDeliveries = new JButton("NumDeliveriesForCustomerID:");
 	private JTextField NumDeliveriesTF  = new JTextField(12);
@@ -107,18 +109,25 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		exportButton.setSize (100, 30);
 		deleteButton.setSize (100, 30);
 		clearButton.setSize (100, 30);
+		previousTableButton.setSize(120, 30);
+		nextTableButton.setSize(100, 30);
 
 		insertButton.setLocation(370, 10);
 		updateButton.setLocation(370, 110);
 		exportButton.setLocation (370, 160);
 		deleteButton.setLocation (370, 60);
 		clearButton.setLocation (370, 210);
+		previousTableButton.setLocation(700, 300);
+		nextTableButton.setLocation(830, 300);
 
 		insertButton.addActionListener(this);
 		updateButton.addActionListener(this);
 		exportButton.addActionListener(this);
 		deleteButton.addActionListener(this);
 		clearButton.addActionListener(this);
+		previousTableButton.addActionListener(this);
+		nextTableButton.addActionListener(this);
+		
 
 		this.ListVehicles.addActionListener(this);
 		this.avgWeightParcel.addActionListener(this);
@@ -130,6 +139,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		content.add(exportButton);
 		content.add(deleteButton);
 		content.add(clearButton);
+		content.add(previousTableButton);
+		content.add(nextTableButton);
 
 
 		TableofDBContents.setPreferredScrollableViewportSize(new Dimension(900, 300));
@@ -150,7 +161,14 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		setVisible(true);
 
 		TableModel.refreshFromDB(stmt);
+		
+		//Change table buttons
+		
+		
+		
+		
 	}
+	
 
 	public void initiate_db_conn()
 	{
@@ -318,6 +336,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 
 				}
+				
+
 	}
 	
 	///////////////////////////////////////////////////////////////////////////
