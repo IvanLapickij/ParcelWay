@@ -25,17 +25,17 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 	private Border lineBorder;
 
-	private JLabel CustomersIDLabel=new JLabel("Customers ID:      ");
-	private JLabel FullNameLabel=new JLabel("FullName:               ");
-	private JLabel AddressLabel=new JLabel("Address:        ");
-	private JLabel EmailLabel=new JLabel("Email:                 ");
-	private JLabel PhoneLabel=new JLabel("Phone:               ");
+	private JLabel ParcelIDLabel=new JLabel("Parcel ID:      (Delete,Update)");
+	private JLabel CustomersIDLabel=new JLabel("Customers ID:      (Insert/Update)");
+	private JLabel WeightLabel=new JLabel("Weight:               (Insert/Update)");
+	private JLabel DimensionsLabel=new JLabel("Dimensions:        (Insert/Update)");
+	private JLabel StatusLabel=new JLabel("Status:                 (Insert/Update)");
 
+	private JTextField ParcelIDTF= new JTextField(10);
 	private JTextField CustomersIDTF= new JTextField(10);
-	private JTextField FullNameTF=new JTextField(10);
-	private JTextField AddressTF=new JTextField(10);
-	private JTextField EmailTF=new JTextField(10);
-	private JTextField PhoneTF=new JTextField(10);
+	private JTextField WeightTF=new JTextField(10);
+	private JTextField DimensionsTF=new JTextField(10);
+	private JTextField StatusTF=new JTextField(10);
 
 	private static QueryTableModel TableModel = new QueryTableModel();
 	//Add the models to JTabels
@@ -47,13 +47,14 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 	private JButton exportButton  = new JButton("Export");
 	private JButton deleteButton  = new JButton("Delete");
 	private JButton clearButton  = new JButton("Clear");
+	private JButton auditButton  = new JButton("Audit");
 
-	private JButton  NumDeliveries = new JButton("NumDeliveriesForCustomerID:");
-	private JTextField NumDeliveriesTF  = new JTextField(12);
-	private JButton avgWeightParcel  = new JButton("avgWeighForParcels");
+	private JButton  NumShipments = new JButton("Total Shipments cost(CustomerID):");
+	private JTextField NumShipmentsTF  = new JTextField(12);
+	private JButton avgWeightParcel  = new JButton("AVG Parcels Weight(Vechile type)");
 	private JTextField avgWeightParcelTF  = new JTextField(12);
 	private JButton ListVehicles  = new JButton("ListAllVehicles");
-	private JButton ListAllPositions  = new JButton("ListAllPositions");
+	private JButton StatusOfDeliveries  = new JButton("StatusOfDeliveries");
 
 
 
@@ -76,28 +77,28 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		detailsPanel.setBackground(Color.lightGray);
 		detailsPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "CRUD Actions"));
 
+		detailsPanel.add(ParcelIDLabel);			
+		detailsPanel.add(ParcelIDTF);
 		detailsPanel.add(CustomersIDLabel);			
 		detailsPanel.add(CustomersIDTF);
-		detailsPanel.add(FullNameLabel);		
-		detailsPanel.add(FullNameTF);
-		detailsPanel.add(AddressLabel);		
-		detailsPanel.add(AddressTF);
-		detailsPanel.add(EmailLabel);	
-		detailsPanel.add(EmailTF);
-		detailsPanel.add(PhoneLabel);		
-		detailsPanel.add(PhoneTF);
+		detailsPanel.add(WeightLabel);		
+		detailsPanel.add(WeightTF);
+		detailsPanel.add(DimensionsLabel);		
+		detailsPanel.add(DimensionsTF);
+		detailsPanel.add(StatusLabel);	
+		detailsPanel.add(StatusTF);
 
 		//setup details panel and add the components to it
 		exportButtonPanel=new JPanel();
 		exportButtonPanel.setLayout(new GridLayout(3,2));
 		exportButtonPanel.setBackground(Color.lightGray);
 		exportButtonPanel.setBorder(BorderFactory.createTitledBorder(lineBorder, "Export Data"));
-		exportButtonPanel.add(NumDeliveries);
-		exportButtonPanel.add(NumDeliveriesTF);
+		exportButtonPanel.add(NumShipments);
+		exportButtonPanel.add(NumShipmentsTF);
 		exportButtonPanel.add(avgWeightParcel);
 		exportButtonPanel.add(avgWeightParcelTF);
 		exportButtonPanel.add(ListVehicles);
-		exportButtonPanel.add(ListAllPositions);
+		exportButtonPanel.add(StatusOfDeliveries);
 		exportButtonPanel.setSize(500, 200);
 		exportButtonPanel.setLocation(3, 300);
 		content.add(exportButtonPanel);
@@ -107,29 +108,34 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		exportButton.setSize (100, 30);
 		deleteButton.setSize (100, 30);
 		clearButton.setSize (100, 30);
+		auditButton.setSize (100, 30);
 
 		insertButton.setLocation(370, 10);
 		updateButton.setLocation(370, 110);
 		exportButton.setLocation (370, 160);
 		deleteButton.setLocation (370, 60);
 		clearButton.setLocation (370, 210);
+		auditButton.setLocation (370, 260);
+		
 
 		insertButton.addActionListener(this);
 		updateButton.addActionListener(this);
 		exportButton.addActionListener(this);
 		deleteButton.addActionListener(this);
 		clearButton.addActionListener(this);
+		auditButton.addActionListener(this);
 
 		this.ListVehicles.addActionListener(this);
 		this.avgWeightParcel.addActionListener(this);
-		this.NumDeliveries.addActionListener(this);
-		this.ListAllPositions.addActionListener(this);
+		this.NumShipments.addActionListener(this);
+		this.StatusOfDeliveries.addActionListener(this);
 
 		content.add(insertButton);
 		content.add(updateButton);
 		content.add(exportButton);
 		content.add(deleteButton);
 		content.add(clearButton);
+		content.add(auditButton);
 
 
 		TableofDBContents.setPreferredScrollableViewportSize(new Dimension(900, 300));
@@ -179,11 +185,11 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		Object target=e.getSource();
 		if (target == clearButton)
 		{
+			ParcelIDTF.setText("");
 			CustomersIDTF.setText("");
-			FullNameTF.setText("");
-			AddressTF.setText("");
-			EmailTF.setText("");
-			PhoneTF.setText("");
+			WeightTF.setText("");
+			DimensionsTF.setText("");
+			StatusTF.setText("");
 		}
 		
 		//INSERT ( Only Customers)
@@ -191,12 +197,11 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 		{		 
 			try
 			{
-				String updateTemp = "INSERT INTO customers_view (FullName, Address, Email, Phone) VALUES ('" 
-	                    + FullNameTF.getText() + "', '" 
-	                    + AddressTF.getText() + "', '" 
-	                    + EmailTF.getText() + "', '" 
-	                    + PhoneTF.getText() + "');";
-
+				String updateTemp = "INSERT INTO parcels_view (CustomerID, Weight, Dimensions, Status) VALUES ('" 
+	                    + CustomersIDTF.getText() + "', '" 
+	                    + WeightTF.getText() + "', '" 
+	                    + DimensionsTF.getText() + "', '" 
+	                    + StatusTF.getText() + "')";
 
 				stmt.executeUpdate(updateTemp);
 
@@ -214,10 +219,10 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				if (target == deleteButton){		 
 					String turnOffFKC = "SET FOREIGN_KEY_CHECKS=0;";
 					String turnOnFKC = "SET FOREIGN_KEY_CHECKS=1;";
-					String CustID = this.CustomersIDTF.getText();
+					String ParcelID = this.ParcelIDTF.getText();
 					try
 					{
-						String deleteTemp = "DELETE FROM customers_view WHERE CustomerID = " + CustID+ ";";
+						String deleteTemp = "DELETE FROM parcels_view WHERE ParcelID = " + ParcelID+ ";";
 						System.out.println(deleteTemp);
 						stmt.executeUpdate(turnOffFKC);
 						stmt.executeUpdate(deleteTemp);
@@ -237,11 +242,18 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				if (target == updateButton){		 
 //					String turnOffFKC = "SET FOREIGN_KEY_CHECKS=0;";
 //					String turnOnFKC = "SET FOREIGN_KEY_CHECKS=1;";
-					String CustID = this.CustomersIDTF.getText();
-					String Address = this.AddressTF.getText();
+					String ParcelID = this.ParcelIDTF.getText();
+					String CustomersID = this.CustomersIDTF.getText();
+					String Weight = this.WeightTF.getText();
+					String Dimensions = this.DimensionsTF.getText();
+					String Status = this.StatusTF.getText();
 					try
 					{
-						String updateTemp = "UPDATE customers_view SET Address = '"+Address+ "' WHERE CustomerID = " + CustID+ ";";
+						 String updateTemp = "UPDATE parcels_view SET CustomerID = '" + CustomersID 
+			                        + "', Weight = '" + Weight 
+			                        + "', Dimensions = '" + Dimensions 
+			                        + "', Status = '" + Status 
+			                        + "' WHERE ParcelID = " + ParcelID + ";";
 						System.out.println(updateTemp);
 //						stmt.executeUpdate(turnOffFKC);
 						stmt.executeUpdate(updateTemp);
@@ -261,6 +273,19 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 				if(target == this.exportButton){
 
 					cmd = "select * FROM Parcels;";
+
+					try{					
+						rs= stmt.executeQuery(cmd); 	
+						writeToFile(rs);
+					}
+					catch(Exception e1){e1.printStackTrace();}
+
+				}
+				
+			// Audit
+				if(target == this.auditButton){
+
+					cmd = "SELECT * FROM Parcels_audit;";
 
 					try{					
 						rs= stmt.executeQuery(cmd); 	
@@ -301,11 +326,11 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 				}
 
-		//Number Of Deliveries
-		if(target == this.NumDeliveries){
-			String CustID = this.NumDeliveriesTF.getText();
+		//Shipment cost
+		if(target == this.NumShipments){
+			String CustID = this.NumShipmentsTF.getText();
 
-			cmd = "select COUNT(ParcelID ) AS DeliveryCount "+  "from  Parcels " + "where CustomerID = '"  +CustID+"';";
+			cmd = "SELECT fnCalculateShippingCostTotal(  '" +CustID+ "') AS ShippingCostTotal;";
 
 			System.out.println(cmd);
 			try{					
@@ -317,9 +342,11 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 		} 
 		
-		//List all Positions
-				if(target == this.ListAllPositions){
-					cmd = "select DISTINCT  Position FROM Employees;";
+		//Status of Deliveries
+				if(target == this.StatusOfDeliveries){
+					cmd = "SELECT Status, COUNT(*) AS ParcelCount\r\n"
+							+ "FROM Parcels\r\n"
+							+ "GROUP BY Status;";
 					System.out.println(cmd);
 					try{					
 						rs= stmt.executeQuery(cmd); 	
@@ -330,6 +357,8 @@ public class JDBCMainWindowContent extends JInternalFrame implements ActionListe
 
 
 				}
+		//Stored Function
+				
 	}
 	
 	///////////////////////////////////////////////////////////////////////////

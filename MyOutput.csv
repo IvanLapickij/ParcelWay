@@ -1,2 +1,4 @@
-DeliveryCount,
-8,
+Status,ParcelCount,
+Delivered,6,
+Failed,5,
+In Transit,3,
